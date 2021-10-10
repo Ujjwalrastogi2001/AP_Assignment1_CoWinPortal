@@ -13,33 +13,37 @@ public class Main {
         System.out.println("CoWin Portal initialized"+
                 "\n ------------------------------");
         int option;
-        System.out.println("1. Add Vaccine"
-                +"\n2. Register Hospital"
-                +"\n3. Register Citizen"
-                +"\n4. Add Slot for Vaccination"
-                +"\n5. Book Slot for Vaccination"
-                +"\n6. List all slots for a hospital"
-                +"\n7. Check Vaccination Status"
-                +"\n8. Exit"
-                +"\n9. personInfo"
-                +"\n------------------------------------");
         String vacName;int noOfDose,gap;
         String hosName;int pin,hosId;
         String name;int age;String nameId;
         int slots,day,quantity,vacType;
         String id;
         while(true){
-            System.out.println("{Menu Options}");
+            System.out.println("1. Add Vaccine"
+                    +"\n2. Register Hospital"
+                    +"\n3. Register Citizen"
+                    +"\n4. Add Slot for Vaccination"
+                    +"\n5. Book Slot for Vaccination"
+                    +"\n6. List all slots for a hospital"
+                    +"\n7. Check Vaccination Status"
+                    +"\n8. Exit"
+                    +"\n------------------------------------");
             option=Reader.nextInt();
             switch(option){
                 case 1:
 
                     System.out.print("Vaccine Name:");
                     vacName=Reader.nextLine();
-                    //System.out.println();
+                    boolean vacAlreadyPresent=false;
+                    for(int i=0;i<vac.size();i++){
+                        if(vac.get(i).vacName.equals(vacName)) vacAlreadyPresent=true;
+                    }
+                    if(vacAlreadyPresent){
+                        System.out.println(" No vaccine can be of same name ");
+                        break;
+                    }
                     System.out.print("Number of Doses:");
                     noOfDose=Reader.nextInt();
-                    //System.out.println();
                     gap=0;
                     if(noOfDose==1);
                     else {
@@ -87,6 +91,14 @@ public class Main {
                     //System.out.println();
                     System.out.print("Unique ID: ");
                     nameId=Reader.nextLine();
+                    boolean idAlPresent=false;
+                    for(int i=0;i< people.size();i++){
+                        if(people.get(i).id.equals(nameId)) idAlPresent=true;
+                    }
+                    if(idAlPresent){
+                        System.out.println("same id Already Present. TRY AGAIN with different id");
+                        break;
+                    }
                     if(age<18){
                         System.out.println("Only above 18 are allowed");
                         break;
@@ -99,8 +111,17 @@ public class Main {
                 case 4:
                     System.out.print("Enter Hospital ID: ");
                     hosId=Reader.nextInt();
+                    boolean hospitalPresent=false;
+                    for(int i=0;i<hospital.size();i++){
+                        if(hospital.get(i).uniqid==hosId) hospitalPresent=true;
+                    }
+                    if(!hospitalPresent){
+                        System.out.println("Hospital Not registered");
+                        break;
+                    }
                     System.out.print("Enter number of Slots to be added: ");
                     slots=Reader.nextInt();
+
                     while(slots--!=0) {
                         System.out.print("Enter Day Number:");
                         day = Reader.nextInt();
@@ -110,7 +131,7 @@ public class Main {
                         for(int i=0;i<vac.size();i++){
                             System.out.println(i+". "+vac.get(i).vacName);
                         }
-                        System.out.println();
+                        //System.out.println();
                         vacType = Reader.nextInt();
                         String doseN=vac.get(vacType).vacName;
                         int totalDoseQuant=(-1);
@@ -135,12 +156,12 @@ public class Main {
                     System.out.print("Enter: ");
                     search=Reader.nextInt();
                     boolean isFullyVac=false;
-                    boolean personPresent=false;
+                    boolean isValidPersonId=false;
                     int nxtDoseDate=0;
                     int personIndex=-1;
                     for(int i=0;i<people.size();i++){
                         if(people.get(i).id.equals(slotBookNameId)) {
-                            personPresent=true;
+                            isValidPersonId=true;
                             personIndex=i;
                             nxtDoseDate = people.get(i).nextDose;
                             if (people.get(i).doseTaken == people.get(i).doseReq) {
@@ -150,6 +171,10 @@ public class Main {
                             }
                             break;
                         }
+                    }
+                    if(!isValidPersonId){
+                        System.out.println("Invalid person Id");
+                        break;
                     }
                     if(isFullyVac) break;
                     switch(search){
@@ -169,6 +194,10 @@ public class Main {
                                 if(hospital.get(i).uniqid==hosIndexId){
                                     hosIndex=i;
                                 }
+                            }
+                            if(hosIndex==-1){
+                                System.out.println("Hospital Not registered");
+                                break;
                             }
                             Hospital temp=hospital.get(hosIndex);
                             for(int i=0;i<temp.slot.size();i++){
@@ -219,6 +248,14 @@ public class Main {
                             String bookvacname;
                             System.out.print("Enter Vaccine name: ");
                             bookvacname=Reader.nextLine();
+                            boolean vacPresent=false;
+                            for(int i=0;i<vac.size();i++){
+                                if(vac.get(i).vacName.equals(bookvacname)) vacPresent=true;
+                            }
+                            if(!vacPresent){
+                                System.out.println("this vaccine is not registerd");
+                                break;
+                            }
                             for(int i=0;i<hospital.size();i++){
                                 Hospital h=hospital.get(i);
                                 for(int j=0;j<h.slot.size();j++){
@@ -243,7 +280,7 @@ public class Main {
                                     for (int j = 0; j < h.slot.size(); j++) {
                                         if (h.slot.get(j).doseName.equals(bookvacname)) {
                                             if(people.get(personIndex).doseTaken==0) {
-                                                //dosetaken==0;
+
                                                 System.out.println(j + "->Day:" + h.slot.get(j).day + " Available Qty:" + h.slot.get(j).quan + " Vaccine:" + h.slot.get(j).doseName);
                                                 count++;
                                             }
@@ -300,7 +337,7 @@ public class Main {
                     }
                     break;
                 case 6:
-                    System.out.print("Hospital Id");
+                    System.out.print("Hospital Id: ");
                     int slotcheckhosid=Reader.nextInt();
                     for(int i=0;i<hospital.size();i++){
                         Hospital h=hospital.get(i);
@@ -323,17 +360,21 @@ public class Main {
                             idIndex=i;
                         }
                     }
+                    if(idIndex==-1){
+                        System.out.println("Person not registered");
+                        break;
+                    }
                     Person pr=people.get(idIndex);
                     if(pr.doseTaken==0){
                         System.out.println("Citizen REGISTERED");
                     }else if(pr.doseTaken<pr.doseReq){
                         System.out.println("PARTIALLY VACCINATED");
-                        System.out.print("Vaccine Given:"+pr.doseName);
+                        System.out.println("Vaccine Given:"+pr.doseName);
                         System.out.println("Number of Doses given:"+pr.doseTaken);
                         System.out.println("Next Dose due date:"+(pr.doseDay+pr.reqGap));
                     }else{
                         System.out.println("FULLY VACCINATED");
-                        System.out.print("Vaccine Given:"+pr.doseName);
+                        System.out.println("Vaccine Given:"+pr.doseName);
                         System.out.println("Number of Doses given:"+pr.doseReq);
                     }
                     break;
@@ -342,53 +383,17 @@ public class Main {
                     System.out.println("ThankYou");
                     return;
 
-                case 9:
-                    System.out.println("Enter id:");
-                    String sampleIdForCheck=Reader.nextLine();
-                    for(int i=0;i<people.size();i++){
-                        if(people.get(i).id.equals(sampleIdForCheck)){
-                            people.get(i).printInfo();
-                        }
-                    }
+
             }
             System.out.println("-------------------------------------------");
 
         }
     }
 }
-class Reader {
-
-    static BufferedReader reader;
-    static StringTokenizer tokenizer;
-
-    static void init(InputStream input) {
-        reader = new BufferedReader(new InputStreamReader(input) );
-        tokenizer = new StringTokenizer("");
-    }
-
-    static String next() throws IOException {
-        while ( ! tokenizer.hasMoreTokens() ) {
-            //TODO add check for eof if necessary
-            tokenizer = new StringTokenizer(
-                    reader.readLine() );
-        }
-        return tokenizer.nextToken();
-    }
-    static String nextLine() throws IOException {
-        return reader.readLine();
-    }
-
-    static int nextInt() throws IOException {
-        return Integer.parseInt( next() );
-    }
-
-    static long nextLong() throws IOException {
-        return Long.parseLong( next() );
-    }
-
-    static double nextDouble() throws IOException {
-        return Double.parseDouble( next() );
-    }
-
-}
+/*-----------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------FINISH------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------
+ */
 

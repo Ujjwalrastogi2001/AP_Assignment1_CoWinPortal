@@ -19,6 +19,7 @@ public class Person {
         doseDay=0;
         doseReq=-1;
     }
+
     public void setVaccine(String n){
         doseName=n;
         if(flag){
