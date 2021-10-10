@@ -36,7 +36,7 @@ public class Main {
                     vacName=Reader.nextLine();
                     boolean vacAlreadyPresent=false;
                     for(int i=0;i<vac.size();i++){
-                        if(vac.get(i).vacName.equals(vacName)) vacAlreadyPresent=true;
+                        if(vac.get(i).getVacName().equals(vacName)) vacAlreadyPresent=true;
                     }
                     if(vacAlreadyPresent){
                         System.out.println(" No vaccine can be of same name ");
@@ -53,7 +53,7 @@ public class Main {
                      //   System.out.println();
                     Vaccine v=new Vaccine(vacName,noOfDose,gap);
                     vac.add(v);
-                    System.out.println("Vaccine Name:"+v.vacName+", Number of Doses:"+v.dose+",Gap Between Doses:"+v.gap);
+                    System.out.println("Vaccine Name:"+v.getVacName()+", Number of Doses:"+v.getDose()+",Gap Between Doses:"+v.getGap());
                     break;
                 case 2:
                     System.out.print("Hospital Name:");
@@ -68,7 +68,7 @@ public class Main {
                         int i=0;
                         boolean flag=true;
                         while(flag && i<size){
-                            if(num==hospital.get(i).uniqid){
+                            if(num==hospital.get(i).getUniqid()){
                                 flag=false;
                                 break;
                             }
@@ -79,7 +79,7 @@ public class Main {
                     }
                     hosId=num;
                     Hospital hos=new Hospital(hosName,pin,hosId);
-                    System.out.println("Hospital Name:"+hos.name+" Pincode:"+hos.pin+" Unique ID:"+hos.uniqid);
+                    System.out.println("Hospital Name:"+hos.getName()+" Pincode:"+hos.getPin()+" Unique ID:"+hos.getUniqid());
                     hospital.add(hos);
                     break;
                 case 3:
@@ -93,7 +93,7 @@ public class Main {
                     nameId=Reader.nextLine();
                     boolean idAlPresent=false;
                     for(int i=0;i< people.size();i++){
-                        if(people.get(i).id.equals(nameId)) idAlPresent=true;
+                        if(people.get(i).getId().equals(nameId)) idAlPresent=true;
                     }
                     if(idAlPresent){
                         System.out.println("same id Already Present. TRY AGAIN with different id");
@@ -106,14 +106,14 @@ public class Main {
                     Person p=new Person(name,age,nameId);
                     people.add(p);
                     System.out.println("REGISTERED");
-                    System.out.println("Citizen Name:"+p.name+",Age:"+p.age+", Unique ID: "+p.id);
+                    System.out.println("Citizen Name:"+p.getName()+",Age:"+p.getAge()+", Unique ID: "+p.getId());
                     break;
                 case 4:
                     System.out.print("Enter Hospital ID: ");
                     hosId=Reader.nextInt();
                     boolean hospitalPresent=false;
                     for(int i=0;i<hospital.size();i++){
-                        if(hospital.get(i).uniqid==hosId) hospitalPresent=true;
+                        if(hospital.get(i).getUniqid()==hosId) hospitalPresent=true;
                     }
                     if(!hospitalPresent){
                         System.out.println("Hospital Not registered");
@@ -129,14 +129,14 @@ public class Main {
                         quantity = Reader.nextInt();
                         System.out.println("Select Vaccine");
                         for(int i=0;i<vac.size();i++){
-                            System.out.println(i+". "+vac.get(i).vacName);
+                            System.out.println(i+". "+vac.get(i).getVacName());
                         }
                         //System.out.println();
                         vacType = Reader.nextInt();
-                        String doseN=vac.get(vacType).vacName;
+                        String doseN=vac.get(vacType).getVacName();
                         int totalDoseQuant=(-1);
                         for(int i=0;i<hospital.size();i++){
-                            if(hospital.get(i).uniqid==hosId){
+                            if(hospital.get(i).getUniqid()==hosId){
                                 totalDoseQuant=hospital.get(i).slotAdd(doseN,day,quantity);
                             }
                         }
@@ -160,11 +160,11 @@ public class Main {
                     int nxtDoseDate=0;
                     int personIndex=-1;
                     for(int i=0;i<people.size();i++){
-                        if(people.get(i).id.equals(slotBookNameId)) {
+                        if(people.get(i).getId().equals(slotBookNameId)) {
                             isValidPersonId=true;
                             personIndex=i;
-                            nxtDoseDate = people.get(i).nextDose;
-                            if (people.get(i).doseTaken == people.get(i).doseReq) {
+                            nxtDoseDate = people.get(i).getNextDose();
+                            if (people.get(i).getDoseTaken() == people.get(i).getDoseReq()) {
                                 System.out.println("Already Fully Vaccinated");
                                 isFullyVac = true;
                                 break;
@@ -183,15 +183,15 @@ public class Main {
                             int bookHosPin=Reader.nextInt();
                             int hosIndex=(-1);
                             for(int i=0;i<hospital.size();i++){
-                                if(hospital.get(i).pin==bookHosPin){
+                                if(hospital.get(i).getPin()==bookHosPin){
                                     //hosIndex=i;
-                                    System.out.println(hospital.get(i).uniqid+" "+hospital.get(i).name);
+                                    System.out.println(hospital.get(i).getUniqid()+" "+hospital.get(i).getName());
                                 }
                             }
                             System.out.print("Enter Hospital Id:");
                             int hosIndexId=Reader.nextInt();
                             for(int i=0;i<hospital.size();i++){
-                                if(hospital.get(i).uniqid==hosIndexId){
+                                if(hospital.get(i).getUniqid()==hosIndexId){
                                     hosIndex=i;
                                 }
                             }
@@ -202,29 +202,28 @@ public class Main {
                             Hospital temp=hospital.get(hosIndex);
                             for(int i=0;i<temp.slot.size();i++){
                                 Slots s=temp.slot.get(i);
-                                System.out.println(i+"->Day: "+s.day+" Available Qty:"+s.quan+" Vaccine:"+s.doseName);
+                                System.out.println(i+"->Day: "+s.getDay()+" Available Qty:"+s.getQuan()+" Vaccine:"+s.getDoseName());
                             }
                             int slot=(-1);
                             System.out.print("Choose Slot:");
                             slot=Reader.nextInt();
 
-                            if(people.get(personIndex).doseTaken>=1){
-                                if(!(temp.slot.get(slot).doseName.equals(people.get(personIndex).doseName))){
+                            if(people.get(personIndex).getDoseTaken()>=1){
+                                if(!(temp.slot.get(slot).getDoseName().equals(people.get(personIndex).getDoseName()))){
                                     System.out.println("You can't mix vaccines.");
                                     break;
                                 }
                             }
-
-                            temp.slot.get(slot).quan--;
+                            temp.slot.get(slot).setQuan(temp.slot.get(slot).getQuan()-1);
                             System.out.println();
                             boolean flag=true;
                             for(int i=0;i<people.size();i++){
-                                if(people.get(i).id.equals(slotBookNameId)){
-                                    System.out.println(people.get(i).name+"  Vaccinated with "+temp.slot.get(slot).doseName);
+                                if(people.get(i).getId().equals(slotBookNameId)){
+                                    System.out.println(people.get(i).getName()+"  Vaccinated with "+temp.slot.get(slot).getDoseName());
                                     flag=false;
                                 }
                             }
-                            if(temp.slot.get(slot).quan<=0){
+                            if(temp.slot.get(slot).getQuan()<=0){
                                 temp.slot.remove(slot);
                             }
                             if(flag){
@@ -233,11 +232,11 @@ public class Main {
                                 //----------------Updating Citizen Status---------------------------------
                                 for(int i=0;i<people.size();i++){
                                     Person per=people.get(i);
-                                    if(per.id.equals(slotBookNameId)){
-                                        if(per.doseTaken==0) per.setVaccine(temp.slot.get(slot).doseName);
-                                        per.doseDay=temp.slot.get(slot).day;
-                                        per.nextDose=per.doseDay+per.reqGap;
-                                        per.doseTaken++;
+                                    if(per.getId().equals(slotBookNameId)){
+                                        if(per.getDoseTaken()==0) per.setVaccine(temp.slot.get(slot).getDoseName());
+                                        per.setDoseDay(temp.slot.get(slot).getDay());
+                                        per.setNextDose(per.getDoseDay()+per.getReqGap());
+                                        per.setDoseTaken(per.getDoseTaken()+1);
                                     }
                                 }
                                 //------------------------------------------------------------------------
@@ -250,7 +249,7 @@ public class Main {
                             bookvacname=Reader.nextLine();
                             boolean vacPresent=false;
                             for(int i=0;i<vac.size();i++){
-                                if(vac.get(i).vacName.equals(bookvacname)) vacPresent=true;
+                                if(vac.get(i).getVacName().equals(bookvacname)) vacPresent=true;
                             }
                             if(!vacPresent){
                                 System.out.println("this vaccine is not registerd");
@@ -259,13 +258,13 @@ public class Main {
                             for(int i=0;i<hospital.size();i++){
                                 Hospital h=hospital.get(i);
                                 for(int j=0;j<h.slot.size();j++){
-                                    if(h.slot.get(j).doseName.equals(bookvacname)){
-                                        System.out.println(h.uniqid+" "+h.name);
+                                    if(h.slot.get(j).getDoseName().equals(bookvacname)){
+                                        System.out.println(h.getUniqid()+" "+h.getName());
                                     }
                                 }
                             }
-                            if(people.get(personIndex).doseTaken>=1){
-                                if(!(people.get(personIndex).doseName.equals(bookvacname))){
+                            if(people.get(personIndex).getDoseTaken()>=1){
+                                if(!(people.get(personIndex).getDoseName().equals(bookvacname))){
                                     System.out.println("You can't mix vaccines.");
                                     break;
                                 }
@@ -276,18 +275,18 @@ public class Main {
                             int count=0;
                             for(int i=0;i<hospital.size();i++) {
                                 Hospital h = hospital.get(i);
-                                if (h.uniqid == bookhosid) {
+                                if (h.getUniqid() == bookhosid) {
                                     for (int j = 0; j < h.slot.size(); j++) {
-                                        if (h.slot.get(j).doseName.equals(bookvacname)) {
-                                            if(people.get(personIndex).doseTaken==0) {
+                                        if (h.slot.get(j).getDoseName().equals(bookvacname)) {
+                                            if(people.get(personIndex).getDoseTaken()==0) {
 
-                                                System.out.println(j + "->Day:" + h.slot.get(j).day + " Available Qty:" + h.slot.get(j).quan + " Vaccine:" + h.slot.get(j).doseName);
+                                                System.out.println(j + "->Day:" + h.slot.get(j).getDay() + " Available Qty:" + h.slot.get(j).getQuan() + " Vaccine:" + h.slot.get(j).getDoseName());
                                                 count++;
                                             }
                                             else {
-                                                if(h.slot.get(j).day==nxtDoseDate) {
+                                                if(h.slot.get(j).getDay()==nxtDoseDate) {
 
-                                                    System.out.println(j + "->Day:" + h.slot.get(j).day + " Available Qty:" + h.slot.get(j).quan + " Vaccine:" + h.slot.get(j).doseName);
+                                                    System.out.println(j + "->Day:" + h.slot.get(j).getDay() + " Available Qty:" + h.slot.get(j).getQuan() + " Vaccine:" + h.slot.get(j).getDoseName());
                                                     count++;
                                                 }
                                             }
@@ -301,15 +300,15 @@ public class Main {
                                     int slotbookviavac;
                                     System.out.print("Choose Slot:");
                                     slotbookviavac = Reader.nextInt();
-                                    h.slot.get(slotbookviavac).quan--;
+                                    h.slot.get(slotbookviavac).setQuan(h.slot.get(slotbookviavac).getQuan()-1);
                                     boolean f = true;
                                     for (int j = 0; j < people.size(); j++) {
-                                        if (people.get(j).id.equals(slotBookNameId)) {
-                                            System.out.println(people.get(j).name + " Vaccinated with " + h.slot.get(slotbookviavac).doseName);
+                                        if (people.get(j).getId().equals(slotBookNameId)) {
+                                            System.out.println(people.get(j).getName() + " Vaccinated with " + h.slot.get(slotbookviavac).getDoseName());
                                             f = false;
                                         }
                                     }
-                                    if (h.slot.get(slotbookviavac).quan <= 0) {
+                                    if (h.slot.get(slotbookviavac).getQuan() <= 0) {
                                         h.slot.remove(slotbookviavac);
                                     }
                                     if (f) {
@@ -318,11 +317,11 @@ public class Main {
                                         //----------------Updating Citizen Status---------------------------------
                                         for(int j=0;j<people.size();j++){
                                             Person per=people.get(j);
-                                            if(per.id.equals(slotBookNameId)){
-                                                if(per.doseTaken==0) per.setVaccine(h.slot.get(slotbookviavac).doseName);
-                                                per.doseDay=h.slot.get(slotbookviavac).day;
-                                                per.nextDose=per.doseDay+per.reqGap;
-                                                per.doseTaken++;
+                                            if(per.getId().equals(slotBookNameId)){
+                                                if(per.getDoseTaken()==0) per.setVaccine(h.slot.get(slotbookviavac).getDoseName());
+                                                per.setDoseDay(h.slot.get(slotbookviavac).getDay());
+                                                per.setNextDose(per.getDoseDay()+per.getReqGap());
+                                                per.setDoseTaken(per.getDoseTaken()+1);
                                             }
                                         }
                                         //------------------------------------------------------------------------
@@ -341,9 +340,9 @@ public class Main {
                     int slotcheckhosid=Reader.nextInt();
                     for(int i=0;i<hospital.size();i++){
                         Hospital h=hospital.get(i);
-                        if(hospital.get(i).uniqid==slotcheckhosid){
+                        if(hospital.get(i).getUniqid()==slotcheckhosid){
                             for(int j=0;j<h.slot.size();j++) {
-                                System.out.println("Day:" + h.slot.get(j).day + " Available Qty:" + h.slot.get(j).quan + " Vaccine:" + h.slot.get(j).doseName);
+                                System.out.println("Day:" + h.slot.get(j).getDay() + " Available Qty:" + h.slot.get(j).getQuan() + " Vaccine:" + h.slot.get(j).getDoseName());
                             }
                             break;
                         }
@@ -356,7 +355,7 @@ public class Main {
                     id=Reader.nextLine();
                     int idIndex=-1;
                     for(int i=0;i<people.size();i++){
-                        if(people.get(i).id.equals(id)){
+                        if(people.get(i).getId().equals(id)){
                             idIndex=i;
                         }
                     }
@@ -365,17 +364,17 @@ public class Main {
                         break;
                     }
                     Person pr=people.get(idIndex);
-                    if(pr.doseTaken==0){
+                    if(pr.getDoseTaken()==0){
                         System.out.println("Citizen REGISTERED");
-                    }else if(pr.doseTaken<pr.doseReq){
+                    }else if(pr.getDoseTaken()<pr.getDoseReq()){
                         System.out.println("PARTIALLY VACCINATED");
-                        System.out.println("Vaccine Given:"+pr.doseName);
-                        System.out.println("Number of Doses given:"+pr.doseTaken);
-                        System.out.println("Next Dose due date:"+(pr.doseDay+pr.reqGap));
+                        System.out.println("Vaccine Given:"+pr.getDoseName());
+                        System.out.println("Number of Doses given:"+pr.getDoseTaken());
+                        System.out.println("Next Dose due date:"+(pr.getDoseDay()+pr.getReqGap()));
                     }else{
                         System.out.println("FULLY VACCINATED");
-                        System.out.println("Vaccine Given:"+pr.doseName);
-                        System.out.println("Number of Doses given:"+pr.doseReq);
+                        System.out.println("Vaccine Given:"+pr.getDoseName());
+                        System.out.println("Number of Doses given:"+pr.getDoseReq());
                     }
                     break;
                 case 8:
@@ -390,6 +389,41 @@ public class Main {
         }
     }
 }
+class Reader {
+    static BufferedReader reader;
+    static StringTokenizer tokenizer;
+
+    static void init(InputStream input) {
+        reader = new BufferedReader(new InputStreamReader(input) );
+        tokenizer = new StringTokenizer("");
+    }
+
+    static String next() throws IOException {
+        while ( ! tokenizer.hasMoreTokens() ) {
+            //TODO add check for eof if necessary
+            tokenizer = new StringTokenizer(
+                    reader.readLine() );
+        }
+        return tokenizer.nextToken();
+    }
+    static String nextLine() throws IOException {
+        return reader.readLine();
+    }
+
+    static int nextInt() throws IOException {
+        return Integer.parseInt( next() );
+    }
+
+    static long nextLong() throws IOException {
+        return Long.parseLong( next() );
+    }
+
+    static double nextDouble() throws IOException {
+        return Double.parseDouble( next() );
+    }
+
+}
+
 /*-----------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------FINISH------------------------------------------------------------------------------
