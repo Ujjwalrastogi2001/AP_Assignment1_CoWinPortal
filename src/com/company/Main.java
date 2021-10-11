@@ -91,6 +91,10 @@ public class Main {
                     //System.out.println();
                     System.out.print("Unique ID: ");
                     nameId=Reader.nextLine();
+                    if(nameId.length()!=12) {
+                        System.out.println("ID should be of length 12");
+                        break;
+                    }
                     boolean idAlPresent=false;
                     for(int i=0;i< people.size();i++){
                         if(people.get(i).getId().equals(nameId)) idAlPresent=true;
@@ -199,10 +203,26 @@ public class Main {
                                 System.out.println("Hospital Not registered");
                                 break;
                             }
+                            int counting=0;
                             Hospital temp=hospital.get(hosIndex);
                             for(int i=0;i<temp.slot.size();i++){
                                 Slots s=temp.slot.get(i);
-                                System.out.println(i+"->Day: "+s.getDay()+" Available Qty:"+s.getQuan()+" Vaccine:"+s.getDoseName());
+                                //if(s.getDay()==people.)
+                                if(people.get(personIndex).getDoseTaken()==0) {
+                                    System.out.println(i + "->Day:" + temp.slot.get(i).getDay() + " Available Qty:" + temp.slot.get(i).getQuan() + " Vaccine:" + temp.slot.get(i).getDoseName());
+                                    counting++;
+                                }
+                                else{
+                                    if(temp.slot.get(i).getDay()==nxtDoseDate) {
+                                        System.out.println(i + "->Day:" + temp.slot.get(i).getDay() + " Available Qty:" + temp.slot.get(i).getQuan() + " Vaccine:" + temp.slot.get(i).getDoseName());
+                                        counting++;
+                                    }
+                                }
+                                //System.out.println(i+"->Day: "+s.getDay()+" Available Qty:"+s.getQuan()+" Vaccine:"+s.getDoseName());
+                            }
+                            if(counting==0){
+                                System.out.println("No slots available");
+                                break;
                             }
                             int slot=(-1);
                             System.out.print("Choose Slot:");
@@ -252,7 +272,7 @@ public class Main {
                                 if(vac.get(i).getVacName().equals(bookvacname)) vacPresent=true;
                             }
                             if(!vacPresent){
-                                System.out.println("this vaccine is not registerd");
+                                System.out.println("This vaccine is not registerd");
                                 break;
                             }
                             for(int i=0;i<hospital.size();i++){
@@ -338,14 +358,20 @@ public class Main {
                 case 6:
                     System.out.print("Hospital Id: ");
                     int slotcheckhosid=Reader.nextInt();
+                    boolean isHospitalIdwrong=true;
                     for(int i=0;i<hospital.size();i++){
                         Hospital h=hospital.get(i);
                         if(hospital.get(i).getUniqid()==slotcheckhosid){
+                            isHospitalIdwrong=false;
                             for(int j=0;j<h.slot.size();j++) {
                                 System.out.println("Day:" + h.slot.get(j).getDay() + " Available Qty:" + h.slot.get(j).getQuan() + " Vaccine:" + h.slot.get(j).getDoseName());
                             }
                             break;
                         }
+                    }
+                    if(isHospitalIdwrong){
+                        System.out.println("Invalid Hospital ID .");
+                        break;
                     }
                     System.out.println();
                     break;
