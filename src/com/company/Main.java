@@ -10,7 +10,7 @@ public class Main {
     }
     public static void main(String[] args) throws IOException {
         Reader.init(System.in);
-        System.out.println("CoWin Portal initialized"+
+        System.out.println("CoWin Portal initialized "+
                 "\n ------------------------------");
         int option;
         String vacName;int noOfDose,gap;
